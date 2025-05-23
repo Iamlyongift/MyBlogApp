@@ -1,5 +1,5 @@
 // src/services/post.service.ts
-import PostModel from "../models/post.model";
+import PostModel from "../models/news.model";
 
 export const getAllPostsService = async () => {
   try {

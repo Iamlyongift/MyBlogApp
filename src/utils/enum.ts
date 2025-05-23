@@ -1,5 +1,6 @@
 export const RoleTypeField = {
   type: String,
-  enum: ["user", "admin"],
-  default: "user",
+  enum: ["Guest", "User", "NewsAdmin"],
+  default: "User",
 };
+

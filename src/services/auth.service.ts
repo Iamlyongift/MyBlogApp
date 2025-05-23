@@ -259,16 +259,13 @@ export const forgotPassword = async (email: string) => {
     throw new Error("User not found");
   }
 
-  const resetToken = user.createResetToken(); // Corrected method name
+  const resetToken = user.createResetPasswordToken(); // Corrected method name
   await user.save({ validateBeforeSave: false });
 
   const resetUrl = `${process.env.RESET_PASSWORD_URL}?token=${resetToken}`;
 
-  await emailService.send({
-    to: [email],
-    subject: "Password Reset Request",
-    html: passwordResetEmail(resetUrl),
-  });
+  await emailService.send(email, resetToken);
+
 
   return { message: "Password reset email sent" };
 };

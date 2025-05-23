@@ -1,7 +1,5 @@
 // src/routes/postRoutes.ts
 import express from "express";
-const router = express.Router();
-
 import {
   getAllPosts,
   getPostById,
@@ -9,11 +7,17 @@ import {
   updatePost,
   deletePost,
 } from "../controllers/post.controller";
+import { auth, requireRole, requireAdmin } from "../middleware/auth";
 
+const router = express.Router();
+
+// Public routes - accessible to all
 router.get("/", getAllPosts);
-router.get("post/:id", getPostById);
-router.post("/", createPost);
-router.put("/:id", updatePost);
-router.delete("/:id", deletePost);
+router.get("/:id", getPostById);  // Fixed the route parameter syntax (was "post/:id")
+
+// Protected routes - require authentication
+router.post("/", auth, createPost);
+router.put("/:id", auth, updatePost);
+router.delete("/:id", auth, requireAdmin, deletePost);
 
 export default router;
