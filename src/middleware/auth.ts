@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import UserModel from "../models/user.model";
-import { UserType } from "../types/user.types";
+import { IUser } from "../types/user.types";
 
 const jwtSecret = process.env.JWT_SECRET as string;
 
 export interface AuthenticatedRequest extends Request {
-  user?: UserType;
+  user?: IUser;
 }
 
 export const auth = async (
@@ -54,7 +54,7 @@ export const requireAdmin = (
   res: Response,
   next: NextFunction
 ) => {
-  if (req.user?.role !== "admin") {
+  if (req.user?.role !== "NewsAdmin") {
     return res.status(403).json({ message: "Access denied. Admin required." });
   }
   next();

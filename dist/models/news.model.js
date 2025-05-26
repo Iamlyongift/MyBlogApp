@@ -32,35 +32,18 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const crypto_1 = __importDefault(require("crypto"));
-const UserSchema = new mongoose_1.Schema({
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    username: { type: String, required: true, unique: true },
-    profilePicture: String,
-    isVerified: { type: Boolean, default: false },
-    role: {
-        type: String,
-        enum: ['Guest', 'User', 'NewsAdmin'],
-        default: 'User'
-    },
-    friends: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'User' }],
-    friendRequests: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'User' }],
-    resetPasswordToken: String,
-    resetPasswordExpire: Date
+const NewsSchema = new mongoose_1.Schema({
+    title: String,
+    content: String,
+    category: String,
+    author: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User' },
+    likes: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'User' }],
+    comments: [{
+            user: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User' },
+            text: String,
+            createdAt: { type: Date, default: Date.now }
+        }]
 }, { timestamps: true });
-UserSchema.methods.createResetPasswordToken = function () {
-    const resetToken = crypto_1.default.randomBytes(32).toString('hex');
-    this.resetPasswordToken = crypto_1.default
-        .createHash('sha256')
-        .update(resetToken)
-        .digest('hex');
-    this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
-    return resetToken;
-};
-exports.default = mongoose_1.default.model('User', UserSchema);
+exports.default = mongoose_1.default.model('News', NewsSchema);
