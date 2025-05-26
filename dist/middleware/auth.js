@@ -50,7 +50,7 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
 exports.auth = auth;
 const requireAdmin = (req, res, next) => {
     var _a;
-    if (((_a = req.user) === null || _a === void 0 ? void 0 : _a.role) !== "admin") {
+    if (((_a = req.user) === null || _a === void 0 ? void 0 : _a.role) !== "NewsAdmin") {
         return res.status(403).json({ message: "Access denied. Admin required." });
     }
     next();
