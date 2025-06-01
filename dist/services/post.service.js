@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePostService = exports.updatePostService = exports.createPostService = exports.getPostByIdService = exports.getAllPostsService = void 0;
-const post_model_1 = __importDefault(require("../models/post.model"));
+const news_model_1 = __importDefault(require("../models/news.model"));
 const getAllPostsService = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const posts = yield post_model_1.default.find();
+        const posts = yield news_model_1.default.find();
         return { status: 200, posts };
     }
     catch (error) {
@@ -26,7 +26,7 @@ const getAllPostsService = () => __awaiter(void 0, void 0, void 0, function* () 
 exports.getAllPostsService = getAllPostsService;
 const getPostByIdService = (postId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const post = yield post_model_1.default.findById(postId);
+        const post = yield news_model_1.default.findById(postId);
         if (!post)
             return { status: 404, message: "Post not found" };
         return { status: 200, post };
@@ -38,7 +38,7 @@ const getPostByIdService = (postId) => __awaiter(void 0, void 0, void 0, functio
 exports.getPostByIdService = getPostByIdService;
 const createPostService = (postData) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const newPost = new post_model_1.default(postData);
+        const newPost = new news_model_1.default(postData);
         const savedPost = yield newPost.save();
         return { status: 201, post: savedPost };
     }
@@ -49,7 +49,7 @@ const createPostService = (postData) => __awaiter(void 0, void 0, void 0, functi
 exports.createPostService = createPostService;
 const updatePostService = (postId, updateData) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const updatedPost = yield post_model_1.default.findByIdAndUpdate(postId, Object.assign(Object.assign({}, updateData), { updatedAt: new Date() }), { new: true });
+        const updatedPost = yield news_model_1.default.findByIdAndUpdate(postId, Object.assign(Object.assign({}, updateData), { updatedAt: new Date() }), { new: true });
         if (!updatedPost)
             return { status: 404, message: "Post not found" };
         return { status: 200, post: updatedPost };
@@ -61,7 +61,7 @@ const updatePostService = (postId, updateData) => __awaiter(void 0, void 0, void
 exports.updatePostService = updatePostService;
 const deletePostService = (postId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const deletedPost = yield post_model_1.default.findByIdAndDelete(postId);
+        const deletedPost = yield news_model_1.default.findByIdAndDelete(postId);
         if (!deletedPost)
             return { status: 404, message: "Post not found" };
         return { status: 204, message: "Post deleted successfully" };

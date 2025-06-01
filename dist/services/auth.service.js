@@ -206,14 +206,10 @@ const forgotPassword = (email) => __awaiter(void 0, void 0, void 0, function* ()
     if (!user) {
         throw new Error("User not found");
     }
-    const resetToken = user.createResetToken();
+    const resetToken = user.createResetPasswordToken();
     yield user.save({ validateBeforeSave: false });
     const resetUrl = `${process.env.RESET_PASSWORD_URL}?token=${resetToken}`;
-    yield email_service_1.default.send({
-        to: [email],
-        subject: "Password Reset Request",
-        html: passwordResetEmail(resetUrl),
-    });
+    yield email_service_1.default.send(email, resetToken);
     return { message: "Password reset email sent" };
 });
 exports.forgotPassword = forgotPassword;

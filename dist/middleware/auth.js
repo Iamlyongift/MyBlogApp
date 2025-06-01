@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.requireAdmin = exports.auth = void 0;
+exports.requireAdmin = exports.requireRole = exports.auth = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_model_1 = __importDefault(require("../models/user.model"));
 const jwtSecret = process.env.JWT_SECRET;
@@ -30,10 +30,7 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
         catch (jwtError) {
             return res.status(401).json({ message: "Invalid token" });
         }
-        console.log("Token:", token);
-        console.log("Decoded:", decoded);
         const user = yield user_model_1.default.findById(decoded._id);
-        console.log("User found:", user);
         if (!user) {
             return res.status(404).json({
                 message: "User not found",
@@ -48,9 +45,19 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.auth = auth;
+const requireRole = (role) => {
+    return (req, res, next) => {
+        var _a;
+        if (((_a = req.user) === null || _a === void 0 ? void 0 : _a.role) !== role) {
+            return res.status(403).json({ error: 'Forbidden: Required role ' + role });
+        }
+        next();
+    };
+};
+exports.requireRole = requireRole;
 const requireAdmin = (req, res, next) => {
     var _a;
-    if (((_a = req.user) === null || _a === void 0 ? void 0 : _a.role) !== "admin") {
+    if (((_a = req.user) === null || _a === void 0 ? void 0 : _a.role) !== "NewsAdmin") {
         return res.status(403).json({ message: "Access denied. Admin required." });
     }
     next();

@@ -1,7 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import multer from "multer";
-import adminRequest from "../../types/admin.types";
+import adminRequest from "../../types/iLum.types";
 
 // Configure Cloudinary
 cloudinary.config({

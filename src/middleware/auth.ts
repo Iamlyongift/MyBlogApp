@@ -1,14 +1,16 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import UserModel from "../models/user.model";
-import { UserType } from "../types/user.types";
+import { IUser, RoleType } from "../types/user.types";
 
 const jwtSecret = process.env.JWT_SECRET as string;
 
+// Define the authenticated request interface
 export interface AuthenticatedRequest extends Request {
-  user?: UserType;
+  user?: IUser;
 }
 
+// Main authentication middleware
 export const auth = async (
   req: AuthenticatedRequest,
   res: Response,
@@ -30,11 +32,8 @@ export const auth = async (
     } catch (jwtError) {
       return res.status(401).json({ message: "Invalid token" });
     }
-    console.log("Token:", token);
-    console.log("Decoded:", decoded);
 
     const user = await UserModel.findById(decoded._id);
-    console.log("User found:", user);
     if (!user) {
       return res.status(404).json({
         message: "User not found",
@@ -49,12 +48,23 @@ export const auth = async (
   }
 };
 
+// Role-based authorization middleware
+export const requireRole = (role: RoleType) => {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    if (req.user?.role !== role) {
+      return res.status(403).json({ error: 'Forbidden: Required role ' + role });
+    }
+    next();
+  };
+};
+
+// Admin authorization middleware shorthand
 export const requireAdmin = (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
-  if (req.user?.role !== "admin") {
+  if (req.user?.role !== "NewsAdmin") {
     return res.status(403).json({ message: "Access denied. Admin required." });
   }
   next();
