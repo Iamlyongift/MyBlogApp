@@ -1,19 +1,19 @@
 // src/routes/postRoutes.ts
 import express from "express";
 import {
+  createPost,
+  deletePost,
   getAllPosts,
   getPostById,
-  createPost,
   updatePost,
-  deletePost,
 } from "../controllers/post.controller";
-import { auth, requireRole, requireAdmin } from "../middleware/auth";
+import { auth, requireAdmin } from "../middleware/auth";
 
 const router = express.Router();
 
 // Public routes - accessible to all
 router.get("/", getAllPosts);
-router.get("/:id", getPostById);  // Fixed the route parameter syntax (was "post/:id")
+router.get("/:id", getPostById); // Fixed the route parameter syntax (was "post/:id")
 
 // Protected routes - require authentication
 router.post("/", auth, createPost);
